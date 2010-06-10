@@ -9,25 +9,13 @@ class SessionsController < ApplicationController
 
   def create
     logout_keeping_session!
-      password_authentication
+    password_authentication
   end
 
   def destroy
     logout_killing_session!
     flash[:notice] = "You have been logged out."
     redirect_back_or_default(root_path)
-  end
-
-  def open_id_authentication
-    authenticate_with_open_id(params[:openid_url], :required => [:nickname, :email]) do |result, identity_url|
-      if result.successful? && self.current_user = User.find_by_identity_url(identity_url)
-        successful_login
-      else
-        flash[:error] = result.message || "Sorry no user with that identity URL exists"
-        @rememer_me = params[:remember_me]
-        render :action => :new
-      end
-    end
   end
   
   protected
